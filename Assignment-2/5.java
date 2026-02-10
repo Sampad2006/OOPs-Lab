@@ -1,7 +1,7 @@
 import java.util.*;
 
 class Customer {
-    private final String customerId; // Final: cannot be changed
+    private final String customerId; 
     private String name;
     private String phoneNumber;
     protected double currentLoanAmount;
@@ -113,7 +113,7 @@ public class BankLoanSystem {
 
                 case 5:
                     for (Customer c : customers) {
-                        System.out.println(c); // Calls toString()
+                        System.out.println(c);
                         c.displayDetails();
                     }
                     break;

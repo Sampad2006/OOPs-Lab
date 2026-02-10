@@ -1,10 +1,12 @@
-// Interface defining the behavior of a Planet
+import java.util.*;
+
+// Interface defining the Planet contract
 interface Planet {
-    String getEnvironmentType();
-    void provideAtmosphericData();
+    String getName();
+    String getMethod();
 }
 
-// Abstract Class for the Explorer
+// Abstract Class defining the Explorer base
 abstract class Explorer {
     protected String name;
 
@@ -12,76 +14,60 @@ abstract class Explorer {
         this.name = name;
     }
 
-    // Abstract method: Every explorer must implement their specific exploration logic
+    // Every explorer must have an explore method
     public abstract void explore(Planet planet);
 }
 
-// Concrete Planet Implementations
+// Planet Implementations
 class Mars implements Planet {
-    public String getEnvironmentType() { return "Dusty/Rocky"; }
-    public void provideAtmosphericData() {
-        System.out.println("Mars: Thin CO2 atmosphere. Monitoring for perchlorates.");
-    }
+    public String getName() { return "Mars"; }
+    public String getMethod() { return "Mineral Exploration."; }
 }
 
 class Venus implements Planet {
-    public String getEnvironmentType() { return "Crushing/Acidic"; }
-    public void provideAtmosphericData() {
-        System.out.println("Venus: High pressure, sulfuric acid clouds. Heat shield active.");
-    }
+    public String getName() { return "Venus"; }
+    public String getMethod() { return "Acid clouds."; }
 }
 
 class Saturn implements Planet {
-    public String getEnvironmentType() { return "Gaseous/Cold"; }
-    public void provideAtmosphericData() {
-        System.out.println("Saturn: No solid surface. Floating in hydrogen/helium layers.");
-    }
+    public String getName() { return "Saturn"; }
+    public String getMethod() { return "gas layers."; }
 }
 
-// Concrete Explorer Implementations
-class Rover extends Explorer {
-    public Rover(String name) { super(name); }
+// Concrete Explorer implementation
+class SpaceExplorer extends Explorer {
+    public SpaceExplorer(String name) {
+        super(name);
+    }
 
     @Override
     public void explore(Planet planet) {
-        System.out.println("\n--- " + name + " (Rover) Landing Sequence ---");
-        planet.provideAtmosphericData();
-        if (planet instanceof Saturn) {
-            System.out.println("Error: Rover cannot explore Saturn. It has no surface to drive on!");
-        } else {
-            System.out.println("Action: Deploying wheels on " + planet.getEnvironmentType() + " terrain.");
-        }
+        System.out.println(this.name + " is exploring " + planet.getName() + " " + planet.getMethod());
     }
 }
 
-class Orbiter extends Explorer {
-    public Orbiter(String name) { super(name); }
-
-    @Override
-    public void explore(Planet planet) {
-        System.out.println("\n--- " + name + " (Orbiter) Scanning Sequence ---");
-        planet.provideAtmosphericData();
-        System.out.println("Action: Capturing high-res images from high altitude.");
-    }
-}
-
-// Main Class
+// Main Driver Class
 public class SpaceMission {
     public static void main(String[] args) {
-        // Create Planets
-        Planet mars = new Mars();
-        Planet venus = new Venus();
-        Planet saturn = new Saturn();
-
-        // Create Explorers
-        Explorer curiosity = new Rover("Curiosity");
-        Explorer cassini = new Orbiter("Cassini");
-
-        // Start Missions
-        curiosity.explore(mars);   // Successful Rover mission
-        curiosity.explore(saturn); // Failed Rover mission logic
+        Scanner sc = new Scanner(System.in);
         
-        cassini.explore(saturn);   // Successful Orbiter mission
-        cassini.explore(venus);    // Successful Orbiter mission
+        // Setup Explorer
+        Explorer explorer = new SpaceExplorer("User-1");
+
+        System.out.println("Select a Planet to explore: 1. Mars, 2. Venus, 3. Saturn");
+        int choice = sc.nextInt();
+
+        Planet target = null;
+        switch (choice) {
+            case 1: target = new Mars(); break;
+            case 2: target = new Venus(); break;
+            case 3: target = new Saturn(); break;
+            default: System.out.println("Invalid choice."); return;
+        }
+
+        // Behavior based on the type of planet passed
+        explorer.explore(target);
+        
+        sc.close();
     }
 }
