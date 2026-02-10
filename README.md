@@ -1,0 +1,1 @@
+Restrain yourself from sharing much kindly.
