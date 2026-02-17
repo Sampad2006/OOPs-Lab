@@ -1,62 +1,72 @@
-public class ReverseCharSequence implements CharSequence {
-    private final String data;
+import java.util.*;
 
+class ReverseCharSequence implements CharSequence {
+    private String data;
+
+    // Constructor
     public ReverseCharSequence(String data) {
         this.data = data;
     }
 
-    // (i) charAt(int index) - Return character from the back
+    // charAt(int index) - Returns the character at the reversed index
     @Override
     public char charAt(int index) {
         if (index < 0 || index >= data.length()) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index: " + index);
         }
-        // Logic: index 0 is actually length-1, index 1 is length-2, etc.
         return data.charAt(data.length() - 1 - index);
     }
 
-    // (ii) int length()
+    //  length() - Returns the total length of the sequence
     @Override
     public int length() {
         return data.length();
     }
 
-    // (iii) CharSequence subSequence(int start, int end)
+    //  subSequence(int start, int end) - Returns a new CharSequence
     @Override
     public CharSequence subSequence(int start, int end) {
-        if (start < 0 || end < 0 || start > end || end > data.length()) {
+        if (start < 0 || end > data.length() || start > end) {
             throw new IndexOutOfBoundsException();
         }
-        // We get the substring normally, then wrap it in a new ReverseCharSequence
-        // to maintain the "backwards" behavior for the sub-sequence.
-        StringBuilder sub = new StringBuilder(data.substring(data.length() - end, data.length() - start));
-        return new ReverseCharSequence(sub.reverse().toString());
+        StringBuilder sb = new StringBuilder(data.substring(data.length() - end, data.length() - start));//builder object
+        return new ReverseCharSequence(sb.reverse().toString());
     }
 
-    // (iv) Override toString()
+    // Override toString() - Returns the fully reversed string
     @Override
     public String toString() {
-        return new StringBuilder(data).reverse().toString();
+        StringBuilder sb = new StringBuilder(data);
+        return sb.reverse().toString();
     }
 
-    public static void main(String[] args) {
-        // Using a common lecture-style sentence
-        String sentence = "Java is an object oriented programming language";
-        ReverseCharSequence rev = new ReverseCharSequence(sentence);
-
-        System.out.println("Original: " + sentence);
+   public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
         
-        // Testing (iv) toString
-        System.out.println("Reverse (toString): " + rev.toString());
+        System.out.println("Enter a sentence to reverse:");
+        String userInput = sc.nextLine();
+        
+        ReverseCharSequence rev = new ReverseCharSequence(userInput);
 
-        // Testing (ii) length
-        System.out.println("Length: " + rev.length());
+        System.out.println("\n--- Testing ReverseCharSequence Methods ---");
+        
+        // 1. toString()
+        System.out.println("1. Full Reversed String: " + rev.toString());
 
-        // Testing (i) charAt
-        System.out.println("Character at index 0 (should be 'e'): " + rev.charAt(0));
+        // 2. length()
+        System.out.println("2. Sequence Length: " + rev.length());
 
-        // Testing (iii) subSequence
-        // Let's get "Java" from the reversed version
-        System.out.println("Subsequence (last 4 chars reversed): " + rev.subSequence(0, 4));
+        // 3. charAt()
+        if (rev.length() > 0) {
+            System.out.println("3. Character at index 0 (last of original): " + rev.charAt(0));
+        }
+
+        // 4. subSequence()
+        if (rev.length() >= 5) {
+            System.out.println("4. Sub-sequence (0 to 5): " + rev.subSequence(0, 5));
+        } else {
+            System.out.println("4. Sub-sequence: String too short for 0-5 test.");
+        }
+
     }
 }

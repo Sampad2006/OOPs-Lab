@@ -1,64 +1,73 @@
 import java.util.*;
 
-public class StringProcessor {
+class Prob{
+    //palin check
+    public static boolean isPalindrome(String s) {
+        if (s == null || s.isEmpty()) return false;
+        int left = 0, right = s.length() - 1;
+        while (left < right) {
+            if (s.charAt(left++) != s.charAt(right--)) return false;
+        }
+        return true;
+    }
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter a sentence:");
         String input = sc.nextLine();
 
-        // i) Number of times 'a' appears
+        //count of a
         int countA = 0;
-        for (char c : input.toCharArray()) {
-            if (c == 'a' || c == 'A') countA++;
-        }
-        System.out.println("Count of 'a': " + countA);
-
-        // ii) Number of times "and" appears
-        int countAnd = 0;
-        String[] words = input.toLowerCase().split("\\s+");
-        for (String w : words) {
-            if (w.equals("and")) countAnd.countAnd++;
-        }
-        // Note: Using indexOf in a loop is more precise for overlapping or mid-word "and"
-        System.out.println("Count of \"and\": " + countAnd);
-
-        // iii) Whether it starts with "The"
-        System.out.println("Starts with \"The\": " + input.startsWith("The"));
-
-        // iv) Put the String into an array of characters
-        char[] charArray = input.toCharArray();
-        System.out.println("Character array created. Length: " + charArray.length);
-
-        // v) Display the tokens separated by space, @, or .
-        // Using Regex: [ @\\.]+ means space, @, or dot (one or more)
-        System.out.println("Tokens:");
-        String[] tokens = input.split("[ @\\.]+");
-        for (String token : tokens) {
-            if (!token.isEmpty()) System.out.println("- " + token);
-        }
-
-        // vi) Find the largest palindrome
-        System.out.println("Largest Palindrome: " + findLargestPalindrome(input));
-    }
-
-    private static String findLargestPalindrome(String sentence) {
-        // Clean the sentence: Remove non-alphanumeric and split into words
-        String cleaned = sentence.replaceAll("[^a-zA-Z0-9 ]", "");
-        String[] words = cleaned.split("\\s+");
-        
-        String largest = "";
-        for (String word : words) {
-            if (isPalindrome(word) && word.length() > largest.length()) {
-                largest = word;
+        for (int i = 0; i < input.length(); i++) {
+            if (Character.toLowerCase(input.charAt(i)) == 'a') {
+                countA++;
             }
         }
-        return largest.isEmpty() ? "None" : largest;
-    }
+        System.out.println("Total a count: " + countA);
 
-    private static boolean isPalindrome(String str) {
-        if (str.length() < 2) return false; // Optional: define if single letters count
-        String rev = new StringBuilder(str).reverse().toString();
-        return str.equalsIgnoreCase(rev);
+        //and count
+        String lowerInput = input.toLowerCase();
+        int countAnd = 0;
+        int pos = 0;
+        while ((pos = lowerInput.indexOf("and", pos)) != -1) {
+            countAnd++;
+            pos += 3; 
+        }
+        System.out.println(" Total and count: " + countAnd);
+
+        //"the" check
+        System.out.println("Starts with \"The\": " + input.startsWith("The"));
+
+        //Put the String into an array of characters
+        char[] charArray = input.toCharArray();
+        System.out.println("Char array created. Length: " + charArray.length);
+
+        // Display tokens (separated by space, @, or .)
+        System.out.println(" Tokens in the String:");
+        String[] tokens = input.split("[ @.]+");//regex
+        for (String token : tokens) {
+            if (!token.isEmpty()) {
+                System.out.println("   - " + token);
+            }
+        }
+
+        //  largest palindrome after removing non-alphanumeric characters
+        String cleaned = input.replaceAll("[^a-zA-Z0-9 ]", "");
+        String[] words = cleaned.split("\\s+"); // Split by one or more spaces
+        
+        String largestPalindrome = "";
+        for (String word : words) {
+            // Check word as a palindrome (case-insensitive)
+            if (isPalindrome(word.toLowerCase()) && word.length() > 1) {
+                if (word.length() > largestPalindrome.length()) {
+                    largestPalindrome = word;
+                }
+            }
+        }
+
+        System.out.println(" Largest palindrome found: " + 
+            (largestPalindrome.isEmpty() ? "None" : largestPalindrome));
+
+        sc.close();
     }
 }
